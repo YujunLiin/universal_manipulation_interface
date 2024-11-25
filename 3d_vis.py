@@ -30,9 +30,11 @@ class DatasetVisualizer:
         self.ax1 = self.fig.add_subplot(131, projection='3d')
  
         # 初始化空的轨迹线
-        # self.line, = self.ax.plot([], [], [], label='3D trajectory', lw=0.1)
-        self.pos, = self.ax1.plot([], [], [], 'ro', linestyle='None', markersize=10, label='Points')
-        self.action, = self.ax1.plot([], [], [], 'go', linestyle='None', markersize=10, label='Points')
+        self.line, = self.ax1.plot([], [], [], 'bx', markersize=3,linestyle="dashdot",label='3D trajectory', lw=0.1)
+        self.pos, = self.ax1.plot([], [], [], 'bo', linestyle='None', markersize=10, label='Points 1')
+        self.action, = self.ax1.plot([], [], [], 'go', linestyle='None', markersize=10, label='Points 2')
+
+        self.x_traj, self.y_traj, self.z_traj = [], [], []
  
  
         # 设置轴标签和范围
@@ -78,12 +80,17 @@ class DatasetVisualizer:
  
     def update(self, val):
         num = int(self.slider.val)
-        # self.line.set_data(self.x[num], self.y[num])
-        # self.line.set_3d_properties(self.z[num])
-        self.pos.set_data(self.x[num - 1], self.y[num - 1])
-        self.pos.set_3d_properties(self.z[num - 1])
+        current_x, current_y,current_z= self.x[num-1], self.y[num-1], self.z[num-1]
+        self.pos.set_data(current_x,current_y)
+        self.pos.set_3d_properties(current_z)
         self.camera0_dis.set_data(self.camera0[num - 1])
         # self.camera1_dis.set_data(self.camera1[num - 1])
+
+        self.x_traj.append(current_x)
+        self.y_traj.append(current_y)
+        self.z_traj.append(current_z)
+        self.line.set_data(self.x_traj, self.y_traj)
+        self.line.set_3d_properties(self.z_traj)
  
         current_time = self.timestamps[num-1]/30
         self.time_text.set_text(f'Time: {current_time:.2f} s\nEpisode: {self.episode_id}\n')

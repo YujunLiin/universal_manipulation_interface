@@ -195,17 +195,17 @@ if __name__ == "__main__":
         )
         if VISUALIZE:
             fig, axes = plt.subplots(3, 3, figsize=(15, 15))
-            for i in range(3):
-                sns.lineplot(x=new_t, y=ee_pos[:, i], ax=axes[i, 0], label="pos")
+            for j in range(3):
+                sns.lineplot(x=new_t, y=ee_pos[:, j], ax=axes[j, 0], label="pos")
                 sns.lineplot(
-                    x=new_t, y=linear_velocity[:, i], ax=axes[i, 1], label="vel"
+                    x=new_t, y=linear_velocity[:, j], ax=axes[j, 1], label="vel"
                 )
                 sns.lineplot(
-                    x=new_t, y=linear_acceleration[:, i], ax=axes[i, 2], label="acc"
+                    x=new_t, y=linear_acceleration[:, j], ax=axes[j, 2], label="acc"
                 )
-                axes[i, 0].set_title(f"Dimension {i}")
-                axes[i, 1].set_title(f"Dimension {i}")
-                axes[i, 2].set_title(f"Dimension {i}")
+                axes[j, 0].set_title(f"Dimension {i}")
+                axes[j, 1].set_title(f"Dimension {i}")
+                axes[j, 2].set_title(f"Dimension {i}")
             plt.show()
 
         # interpolate orientation using scipy (scalar last)
@@ -231,18 +231,21 @@ if __name__ == "__main__":
             ]
         ).T
         if VISUALIZE:
+            print(i)
+            print(f"Visualizing angular velocity of {i}")
             visualize(
                 ang_vel,
                 smoothed_ang_vel,
+                path=path.replace(".pkl", f"_ang_vel_{i:04d}.png"),
             )
         ang_vel = smoothed_ang_vel
 
         # plot angular velocity and rotation
         if VISUALIZE:
             fig, axes = plt.subplots(3, 2, figsize=(15, 15))
-            for i in range(3):
-                sns.lineplot(x=new_t, y=ee_axis_angle[:, i], ax=axes[i, 0])
-                sns.lineplot(x=new_t, y=ang_vel[:, i], ax=axes[i, 1])
+            for j in range(3):
+                sns.lineplot(x=new_t, y=ee_axis_angle[:, j], ax=axes[j, 0])
+                sns.lineplot(x=new_t, y=ang_vel[:, j], ax=axes[j, 1])
             plt.show()
 
         gripper_width = np.interp(new_t, t, gripper_width)
